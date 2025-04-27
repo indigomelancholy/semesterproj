@@ -1,6 +1,11 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -11,20 +16,41 @@ public class StudentMain extends JFrame {
     private JButton enrolInCourseButton;
     private JLabel nameLabel;
     private JPanel panel;
+    private JLabel photolabel;
 
     public StudentMain() {
         setSize(400, 400);
         setContentPane(panel);
-        setVisible(true);
+
+
 
         nameLabel.setText("Logged in as: " + User.getFirstName() + " " + User.getLastName());
+        String firstName = User.getFirstName();
+        String lastName = User.getLastName();
+        InputStream imgStream = User.getPhotoStream();
+
+        if (imgStream != null) {
+            try {
+                BufferedImage userImage = ImageIO.read(imgStream);
+                Image scaledImg = userImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+                photolabel.setIcon(new ImageIcon(scaledImg));
+            } catch (IOException e) {
+                System.out.println("Error loading user photo: " + e.getMessage());
+                photolabel.setText("No photo");
+            }
+        } else {
+            photolabel.setText("No photo");
+        }
+
+        setVisible(true);
 
 
         gradesManagementButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                int studentID = User.getStudentID();
 
-                new CourseManagement();
+                new GradeManagement(studentID);
 
             }
         });

@@ -1,8 +1,11 @@
+import java.io.InputStream;
+
 public class User {
     private static int studentID;
     private static int teacherID;
     private static String firstName;
     private static String lastName;
+    private static InputStream photoStream;
 
     public static void setStudentID(int id) {
         studentID = id;
@@ -34,5 +37,13 @@ public class User {
 
     public static String getLastName() {
         return lastName;
+    }
+
+    public static void setPhotoStream(InputStream stream) {
+        photoStream = stream;
+    }
+
+    public static InputStream getPhotoStream() {
+        return photoStream;
     }
 }

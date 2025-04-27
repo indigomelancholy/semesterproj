@@ -1,6 +1,8 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.InputStream;
 
 public class LoginForm extends JFrame {
     private JTextField textField2;
@@ -12,16 +14,25 @@ public class LoginForm extends JFrame {
     private JPanel panel;
     private JLabel loginStatus;
     private JLabel loginStatusDisp;
+    private JLabel logolabel;
 
-    private String id;
-    private String firstName;
-    private String lastName;
+
 
 
     public LoginForm() {
         setSize(400, 400);
         setContentPane(panel);
+
+        ImageIcon logoimg = new ImageIcon(getClass().getResource("/logo.png"));
+        Image img = logoimg.getImage();
+        Image scaledImg = img.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+        logolabel.setIcon(new ImageIcon(scaledImg));
+
+        comboBox1.setModel(new DefaultComboBoxModel<>(new String[]{"student", "teacher"}));
+
         setVisible(true);
+
+
 
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -30,27 +41,42 @@ public class LoginForm extends JFrame {
                 String email = textField2.getText().trim();
                 String password = textField3.getText().trim();
 
-                String[] userDetails = connect.loginMethod(email, password, role);
+                Object[] userDetails = connect.loginMethod(email, password, role);
                 if (userDetails != null) {
 
                     loginStatus.setText("Login Successful");
+                    String id = (String) userDetails[0];
+                    String firstName = (String) userDetails[1];
+                    String lastName = (String) userDetails[2];
+                    InputStream imgStream = (InputStream) userDetails[3];
+
+                    User.setFirstName(firstName);
+                    User.setLastName(lastName);
+                    User.setPhotoStream(imgStream);
 
                     dispose();
 
                     if (role.equalsIgnoreCase("student")) {
-                        User.setStudentID(Integer.parseInt(userDetails[0]));
-                        User.setFirstName(userDetails[1]);
-                        User.setLastName(userDetails[2]);
-                        dispose();
-                        new StudentMain();
+                        User.setStudentID(Integer.parseInt(id));
+
                     }else if (role.equalsIgnoreCase("teacher")){
-                        User.setTeacherID(Integer.parseInt(userDetails[0]));
-                        User.setFirstName(userDetails[1]);
-                        User.setLastName(userDetails[2]);
-                        dispose();
-                        new TeacherMain();                     }
+                        User.setTeacherID(Integer.parseInt(id));
+
+                }
+                    User.setFirstName(firstName);
+                    User.setLastName(lastName);
+                    User.setPhotoStream(imgStream);
+
+                    dispose();
+
+                    if (role.equalsIgnoreCase("student")) {
+                        new StudentMain();
+                    } else if (role.equalsIgnoreCase("teacher")) {
+                        new TeacherMain();
+                    }
+
                 }else{
-                    loginStatus.setText("Login Failed");
+                    loginStatus.setText("Login failed!");
                 }
             }
         });
@@ -67,3 +93,4 @@ public class LoginForm extends JFrame {
         });
     }
 }
+

@@ -77,6 +77,7 @@ public class TeacherMain extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 new StudentManagement();
+dispose();
             }
         });
 

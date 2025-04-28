@@ -52,7 +52,7 @@ public class StudentManagement extends JFrame{
         table1.getColumnModel().getColumn(0).setPreferredWidth(100);
         table1.getColumnModel().getColumn(1).setPreferredWidth(150);
         table1.getColumnModel().getColumn(2).setPreferredWidth(200);
-        table1.getColumnModel().getColumn(3).setPreferredWidth(150);
+        table1.getColumnModel().getColumn(3).setPreferredWidth(250);
         table1.getColumnModel().getColumn(4).setPreferredWidth(50);
         table1.getColumnModel().getColumn(5).setPreferredWidth(150);
         table1.getColumnModel().getColumn(6).setPreferredWidth(100);
@@ -142,10 +142,14 @@ public class StudentManagement extends JFrame{
         searchbar.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
+                String searchText = searchbar.getText();
+                if (searchText != null) {
+                    searchText = searchText.trim().toLowerCase();
 
-                String searchText = searchbar.getText().trim().toLowerCase();
+                } else {
+                    searchText = "";
+                }
                 filterSearch(searchText);
-
             }
         });
 

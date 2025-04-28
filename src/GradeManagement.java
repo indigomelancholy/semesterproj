@@ -79,8 +79,12 @@ public class GradeManagement extends JFrame{
         searchbar.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-
-                String searchText = searchbar.getText().trim().toLowerCase();
+                String searchText = searchbar.getText();
+                if (searchText != null) {
+                    searchText = searchText.trim().toLowerCase();
+                } else {
+                    searchText = "";
+                }
                 filterGrades(searchText);
             }
         });

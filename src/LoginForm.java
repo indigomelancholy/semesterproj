@@ -84,7 +84,7 @@ public class LoginForm extends JFrame {
         logolabel.setBackground(new Color(241, 182, 238));
 
 
-        comboBox1.setModel(new DefaultComboBoxModel<>(new String[]{"student", "teacher"}));
+        comboBox1.setModel(new DefaultComboBoxModel<>(new String[]{"Student", "Teacher"}));
 
         setVisible(true);
 
@@ -101,28 +101,40 @@ public class LoginForm extends JFrame {
                 Object[] userDetails = connect.loginMethod(email, password, role);
                 if (userDetails != null) {
 
-                    loginStatus.setText("Login Successful");
+                    loginStatus.setText("Login successful!");
 
-                    String id = (String) userDetails[0];
-                    String firstName = (String) userDetails[1];
-                    String lastName = (String) userDetails[2];
-                    InputStream imgStream = (InputStream) userDetails[3];
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(3000);
+                            } catch (InterruptedException ex) {
+                                ex.printStackTrace();
+                            }
 
-                    User.setFirstName(firstName);
-                    User.setLastName(lastName);
-                    User.setPhotoStream(imgStream);
+
+                            String id = (String) userDetails[0];
+                            String firstName = (String) userDetails[1];
+                            String lastName = (String) userDetails[2];
+                            InputStream imgStream = (InputStream) userDetails[3];
+
+                            User.setFirstName(firstName);
+                            User.setLastName(lastName);
+                            User.setPhotoStream(imgStream);
 
 
-                    if (role.equalsIgnoreCase("student")) {
-                        User.setStudentID(Integer.parseInt(id));
-                        new StudentMain();
+                            if (role.equalsIgnoreCase("student")) {
+                                User.setStudentID(Integer.parseInt(id));
+                                new StudentMain();
 
-                    }else if (role.equalsIgnoreCase("teacher")) {
-                        User.setTeacherID(Integer.parseInt(id));
-                        new TeacherMain();
-                    }
+                            } else if (role.equalsIgnoreCase("teacher")) {
+                                User.setTeacherID(Integer.parseInt(id));
+                                new TeacherMain();
+                            }
 
-                    dispose();
+                            dispose();
+                        }
+                    });
                 }else{
                     loginStatus.setText("Login failed!");
                 }

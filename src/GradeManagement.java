@@ -3,8 +3,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.*;
-import java.util.ArrayList;
 
 public class GradeManagement extends JFrame{
     private JTable table1;
@@ -14,25 +15,70 @@ public class GradeManagement extends JFrame{
     private JPanel panel;
     private DefaultTableModel model;
     private JLabel gpaLabel;
+    private JLabel grades;
 
     private int studentID;
 
-    public GradeManagement(int studentID) {
-        this.studentID = studentID;
 
-        setSize(500, 500);
+
+    public GradeManagement(int studentID) {
+        setSize(1000, 700);
         setContentPane(panel);
-        setVisible(true);
+
+        panel.setBackground(new Color(241, 182, 238));
 
         model = new DefaultTableModel(new String[]{"Course name", "Grade", "Teacher name"}, 0);
 
         table1.setModel(model);
 
+        Font font = new Font("Roboto", Font.PLAIN, 20);
+        Font buttonFont = new Font("Cambria", Font.BOLD, 24);
+        Font labelFont = new Font("Roboto", Font.BOLD, 18);
+
+        gpaLabel.setFont(labelFont);
+        gpaLabel.setForeground(new Color(115, 76, 187));
+
+        grades.setFont(labelFont);
+        grades.setForeground(new Color(87, 40, 105));
+
+        table1.setFont(font);
+        table1.setRowHeight(30);
+        table1.setBackground(new Color(230, 230, 250));
+        table1.setSelectionBackground(new Color(115, 76, 187));
+        table1.setPreferredScrollableViewportSize(new Dimension(900, 500));
+        table1.setFillsViewportHeight(true);
+
+
+        table1.getColumnModel().getColumn(0).setPreferredWidth(50);
+        table1.getColumnModel().getColumn(1).setPreferredWidth(100);
+        table1.getColumnModel().getColumn(2).setPreferredWidth(100);
+
+        searchbar.setFont(font);
+        searchbar.setForeground(Color.MAGENTA);
+        searchbar.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 255), 2));
+
+        backButton.setBackground(new Color(115, 76, 187));
+        backButton.setForeground(Color.WHITE);
+        backButton.setFont(buttonFont);
+        backButton.setPreferredSize(new Dimension(100, 20));
+
+        calculateGPAButton.setBackground(new Color(115, 76, 187));
+        calculateGPAButton.setForeground(Color.WHITE);
+        calculateGPAButton.setFont(buttonFont);
+        calculateGPAButton.setPreferredSize(new Dimension(100, 20));
+
+        this.studentID = studentID;
+
+
+
         loadGrades();
 
-        searchbar.addKeyListener(new java.awt.event.KeyAdapter() {
+        setVisible(true);
+
+
+        searchbar.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyReleased(java.awt.event.KeyEvent e) {
+            public void keyReleased(KeyEvent e) {
 
                 String searchText = searchbar.getText().trim().toLowerCase();
                 filterGrades(searchText);
@@ -97,6 +143,9 @@ public class GradeManagement extends JFrame{
         }
     }
     private void filterGrades(String searchText) {
+
+        if (model == null) return;
+
         DefaultTableModel filteredModel = new DefaultTableModel(new String[]{"Course Name", "Grade", "Teacher Name"}, 0);
 
         for (int row = 0; row < model.getRowCount(); row++) {

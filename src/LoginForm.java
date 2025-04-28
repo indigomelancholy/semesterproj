@@ -6,7 +6,7 @@ import java.io.InputStream;
 
 public class LoginForm extends JFrame {
     private JTextField textField2;
-    private JTextField textField3;
+    private JPasswordField textField3;
     private JButton loginButton;
     private JButton resetButton;
     private JLabel login;
@@ -94,10 +94,14 @@ public class LoginForm extends JFrame {
                 String email = textField2.getText().trim();
                 String password = textField3.getText().trim();
 
+                    loginStatus.setText("Logging in...");
+
+
                 Object[] userDetails = connect.loginMethod(email, password, role);
                 if (userDetails != null) {
 
                     loginStatus.setText("Login Successful");
+
                     String id = (String) userDetails[0];
                     String firstName = (String) userDetails[1];
                     String lastName = (String) userDetails[2];
@@ -107,28 +111,17 @@ public class LoginForm extends JFrame {
                     User.setLastName(lastName);
                     User.setPhotoStream(imgStream);
 
-                    dispose();
 
                     if (role.equalsIgnoreCase("student")) {
                         User.setStudentID(Integer.parseInt(id));
-
-                    }else if (role.equalsIgnoreCase("teacher")){
-                        User.setTeacherID(Integer.parseInt(id));
-
-                }
-                    User.setFirstName(firstName);
-                    User.setLastName(lastName);
-                    User.setPhotoStream(imgStream);
-
-
-                    if (role.equalsIgnoreCase("student")) {
                         new StudentMain();
-                        dispose();
-                    } else if (role.equalsIgnoreCase("teacher")) {
+
+                    }else if (role.equalsIgnoreCase("teacher")) {
+                        User.setTeacherID(Integer.parseInt(id));
                         new TeacherMain();
-                        dispose();
                     }
 
+                    dispose();
                 }else{
                     loginStatus.setText("Login failed!");
                 }

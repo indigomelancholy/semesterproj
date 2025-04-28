@@ -18,6 +18,8 @@ public class StudentMain extends JFrame {
     private JLabel nameLabel;
     private JPanel panel;
     private JLabel photolabel;
+    private JLabel mana;
+    private JLabel main;
 
     public StudentMain() {
         setSize(800, 600);
@@ -43,6 +45,11 @@ public class StudentMain extends JFrame {
         enrolInCourseButton.setFont(buttonFont);
         enrolInCourseButton.setPreferredSize(new Dimension(250, 40));
 
+        main.setFont(font);
+        main.setForeground(new Color(87, 40, 105));
+
+        mana.setFont(font);
+        mana.setForeground(new Color(87, 40, 105));
 
         String firstName = User.getFirstName();
         String lastName = User.getLastName();

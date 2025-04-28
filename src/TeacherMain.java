@@ -16,6 +16,8 @@ public class TeacherMain extends JFrame {
     private JButton createCourseButton;
     private JPanel panel;
     private JLabel photolabel;
+    private JLabel main;
+    private JLabel mana;
 
     public TeacherMain() {
         setSize(600, 600);
@@ -25,6 +27,13 @@ public class TeacherMain extends JFrame {
         Font font = new Font("Roboto", Font.PLAIN, 20);
         Font buttonFont = new Font("Cambria", Font.BOLD, 24);
         Font labelFont = new Font("Roboto", Font.BOLD, 18);
+
+        main.setFont(font);
+        main.setForeground(new Color(87, 40, 105));
+
+        mana.setFont(font);
+        mana.setForeground(new Color(87, 40, 105));
+
 
         nameLabel.setFont(labelFont);
         nameLabel.setForeground(new Color(115, 76, 187));
@@ -77,28 +86,29 @@ new StudentManagement();
 
                 if (courseName != null && !courseName.trim().isEmpty()) {
 
-                    try(Connection connection = connect.getConnection()){
+                    try(Connection connection = connect.getConnection();
                         PreparedStatement stmt = connection.prepareStatement("SELECT MAX(CourseID) from Courses");
-                        ResultSet rs = stmt.executeQuery();
+                        ResultSet rs = stmt.executeQuery()){
 
-                        int newCourseID = 1;
-                        if(rs.next()){
-                            newCourseID = rs.getInt(1) + 1;
+                            int newCourseID = 1;
+                            if (rs.next()) {
+                                newCourseID = rs.getInt(1) + 1;
+                            }
+
+                        try(PreparedStatement insertcourse = connection.prepareStatement("INSERT INTO Courses (CourseID, CourseName, TeacherID) VALUES (?, ?,?)")) {
+
+                            insertcourse.setInt(1, newCourseID);
+                            insertcourse.setString(2, courseName);
+                            insertcourse.setInt(3, User.getTeacherID());
+
+                            insertcourse.executeUpdate();
+
+                            JOptionPane.showMessageDialog(TeacherMain.this, "Course created is: " + courseName + "(ID: " + newCourseID + ")");
                         }
 
-                        PreparedStatement insertcourse = connection.prepareStatement("INSERT INTO Courses (CourseID, CourseName, TeacherID) VALUES (?, ?,?)");
-
-                        insertcourse.setInt(1, newCourseID);
-                        insertcourse.setString(2, courseName);
-                        insertcourse.setInt(3, User.getTeacherID());
-
-                        insertcourse.executeUpdate();
-
-                        JOptionPane.showMessageDialog(TeacherMain.this, "Course created is: " + courseName + "(ID: " + newCourseID + ")");
-
-                    }catch (Exception ex) {
-                        JOptionPane.showMessageDialog(TeacherMain.this, "Error: " + ex.getMessage());
-                    }
+                    }catch (Exception ex){
+                            JOptionPane.showMessageDialog(TeacherMain.this, "Error: " + ex.getMessage());
+                        }
 
                 }else{
                     JOptionPane.showMessageDialog(TeacherMain.this, "Course name cant be empty.");

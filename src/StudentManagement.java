@@ -17,19 +17,75 @@ public class StudentManagement extends JFrame{
     private JScrollPane table;
     private JComboBox comboBox;
     private JPanel panel;
+    private JLabel studentm;
 
     private DefaultTableModel model;
     private ArrayList<String[]> students;
 
     public StudentManagement() {
-        setSize(800, 600);
+        setSize(1000, 700);
         setContentPane(panel);
-        setVisible(true);
 
-        model = new DefaultTableModel(new String[]{"ID", "FirstName", "LastName", "Photo", "Age", "Email", "GPA"}, 0);
+        panel.setBackground(new Color(241, 182, 238));
+
+        Font font = new Font("Roboto", Font.PLAIN, 20);
+        Font buttonFont = new Font("Cambria", Font.BOLD, 24);
+        Font labelFont = new Font("Roboto", Font.BOLD, 18);
+
+        model = new DefaultTableModel(new String[]{"ID", "FirstName", "LastName", "Photo", "Age", "Email", "GPA"}, 0){
+            @Override
+            public Class<?> getColumnClass(int column) {
+                return (column == 3) ? ImageIcon.class : Object.class;
+            }
+        };
+
         table1.setModel(model);
+        table1.setFont(font);
+        table1.setPreferredScrollableViewportSize(new Dimension(900, 500));
+        table1.setFillsViewportHeight(true);
+
+        table1.getColumnModel().getColumn(0).setPreferredWidth(50);
+        table1.getColumnModel().getColumn(1).setPreferredWidth(100);
+        table1.getColumnModel().getColumn(2).setPreferredWidth(100);
+
+        table1.setRowHeight(30);
+        table1.setBackground(new Color(230, 230, 250));
+        table1.setSelectionBackground(new Color(115, 76, 187));
+        table.setViewportView(table1);
+
+        studentm.setFont(labelFont);
+        studentm.setForeground(new Color(87, 40, 105));
+
+
+        searchbar.setFont(font);
+        searchbar.setForeground(Color.MAGENTA);
+        searchbar.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 255), 2));
+
+        addStudentButton.setBackground(new Color(115, 76, 187));
+        addStudentButton.setForeground(Color.WHITE);
+        addStudentButton.setFont(buttonFont);
+        addStudentButton.setPreferredSize(new Dimension(100, 20));
+
+        deleteStudentButton.setBackground(new Color(115, 76, 187));
+        deleteStudentButton.setForeground(Color.WHITE);
+        deleteStudentButton.setFont(buttonFont);
+        deleteStudentButton.setPreferredSize(new Dimension(100, 20));
+
+        backButton.setBackground(new Color(200, 100, 133));
+        backButton.setForeground(Color.WHITE);
+        backButton.setFont(buttonFont);
+        backButton.setPreferredSize(new Dimension(100, 20));
+
+        comboBox.setFont(font);
+        comboBox.setBackground(new Color(230, 230, 250));
+
+
+
 
         loadStudents();
+
+        setVisible(true);
+
 
         table1.setDefaultEditor(Object.class, new DefaultCellEditor(new JTextField()) {
             private String oldValue;
@@ -118,9 +174,10 @@ public class StudentManagement extends JFrame{
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-dispose();
 
 new TeacherMain();
+
+                dispose();
 
             }
         });
@@ -174,8 +231,8 @@ new TeacherMain();
                 double gpa = Double.parseDouble(student[6]);
 
                 if (selected.equals("All") ||
-                        (selected.equals("High GPA (>3.5)") && gpa > 3.5) ||
-                        (selected.equals("Low GPA (<2.0)") && gpa < 2.0)) {
+                        (selected.equals("High GPA (>50.5)") && gpa > 50.5) ||
+                        (selected.equals("Low GPA (<50.0)") && gpa < 50.0)) {
 
                     model.addRow(student);
                 }

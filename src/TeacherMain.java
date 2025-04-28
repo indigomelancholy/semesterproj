@@ -20,7 +20,7 @@ public class TeacherMain extends JFrame {
     private JLabel mana;
 
     public TeacherMain() {
-        setSize(600, 600);
+        setSize(900, 600);
         setContentPane(panel);
         panel.setBackground(new Color(241, 182, 238));
 
@@ -59,8 +59,10 @@ public class TeacherMain extends JFrame {
         if (imgStream != null) {
             try {
                 BufferedImage userImage = ImageIO.read(imgStream);
-                Image scaledImg = userImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+                Image scaledImg = userImage.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
                 photolabel.setIcon(new ImageIcon(scaledImg));
+                photolabel.setBorder(BorderFactory.createLineBorder(new Color(115, 76, 187), 4));
+
             } catch (IOException e) {
                 System.out.println("Error loading user photo: " + e.getMessage());
                 photolabel.setText("No Photo");

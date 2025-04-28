@@ -12,7 +12,7 @@
     <children>
       <component id="57f40" class="javax.swing.JLabel" binding="login">
         <constraints>
-          <grid row="0" column="0" row-span="3" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="3" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Login"/>
@@ -80,9 +80,9 @@
       <component id="8b0a8" class="javax.swing.JLabel" binding="logolabel">
         <constraints>
           <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
-            <minimum-size width="150" height="150"/>
-            <preferred-size width="150" height="150"/>
-            <maximum-size width="150" height="150"/>
+            <minimum-size width="200" height="200"/>
+            <preferred-size width="200" height="200"/>
+            <maximum-size width="200" height="200"/>
           </grid>
         </constraints>
         <properties>
@@ -115,7 +115,7 @@
       </component>
       <component id="5bc66" class="javax.swing.JLabel" binding="cred">
         <constraints>
-          <grid row="4" column="0" row-span="4" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="0" row-span="4" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Please enter your credentials! "/>

@@ -47,12 +47,16 @@ public class StudentManagement extends JFrame{
         table1.setFont(font);
         table1.setPreferredScrollableViewportSize(new Dimension(900, 500));
         table1.setFillsViewportHeight(true);
+        table1.setRowHeight(100);
 
-        table1.getColumnModel().getColumn(0).setPreferredWidth(50);
-        table1.getColumnModel().getColumn(1).setPreferredWidth(100);
-        table1.getColumnModel().getColumn(2).setPreferredWidth(100);
+        table1.getColumnModel().getColumn(0).setPreferredWidth(100);
+        table1.getColumnModel().getColumn(1).setPreferredWidth(150);
+        table1.getColumnModel().getColumn(2).setPreferredWidth(200);
+        table1.getColumnModel().getColumn(3).setPreferredWidth(150);
+        table1.getColumnModel().getColumn(4).setPreferredWidth(50);
+        table1.getColumnModel().getColumn(5).setPreferredWidth(150);
+        table1.getColumnModel().getColumn(6).setPreferredWidth(100);
 
-        table1.setRowHeight(30);
         table1.setBackground(new Color(230, 230, 250));
         table1.setSelectionBackground(new Color(115, 76, 187));
         table.setViewportView(table1);
@@ -82,8 +86,9 @@ public class StudentManagement extends JFrame{
 
         comboBox.setFont(font);
         comboBox.setBackground(new Color(230, 230, 250));
-
-
+        comboBox.addItem("All");
+        comboBox.addItem("High GPA (>50.0)");
+        comboBox.addItem("Low GPA (<50.0)");
 
 
         loadStudents();
@@ -180,7 +185,7 @@ public class StudentManagement extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
 
-new TeacherMain();
+                new TeacherMain();
 
                 dispose();
 
@@ -200,32 +205,6 @@ new TeacherMain();
             }
         }
 
-        private void loadPhotos(){
-            try (Connection conn = connect.getConnection();
-                 PreparedStatement stmt = conn.prepareStatement(query)) {
-                stmt.setInt(1, User.studentID);
-                ResultSet rs = stmt.executeQuery();
-
-                while (rs.next()) {
-                    String courseName = rs.getString("CourseName");
-                    String grade = rs.getString("Grade");
-                    String teacherName = rs.getString("TeacherName");
-
-                    Blob imageBlob = rs.getBlob("ImageData");
-                    ImageIcon imageIcon = null;
-                    if (imageBlob != null) {
-                        InputStream inputStream = imageBlob.getBinaryStream();
-                        BufferedImage image = ImageIO.read(inputStream);
-                        Image scaledImage = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-                        imageIcon = new ImageIcon(scaledImage);
-                    }
-
-                    model.addRow(new Object[]{courseName, grade, teacherName, imageIcon});
-                }
-            } catch (SQLException | IOException e) {
-                e.printStackTrace();
-            }
-        }
 
         private void filterSearch (String searchText) {
             model.setRowCount(0);
@@ -263,12 +242,13 @@ new TeacherMain();
                 double gpa = Double.parseDouble(student[6]);
 
                 if (selected.equals("All") ||
-                        (selected.equals("High GPA (>50.5)") && gpa > 50.5) ||
+                        (selected.equals("High GPA (>50.0)") && gpa > 50.0) ||
                         (selected.equals("Low GPA (<50.0)") && gpa < 50.0)) {
 
                     model.addRow(student);
                 }
             }
+            loadPhotos();
         }
 
         private void AddDialog() {
@@ -365,5 +345,39 @@ new TeacherMain();
             dialog.setLocationRelativeTo(this);
             dialog.setVisible(true);
 
+    }
+
+    private void loadPhotos() {
+        try {
+            ArrayList<Object[]> studentPhotos = connect.getAllStudentPhotos();
+
+            for (int i = 0; i < table1.getRowCount(); i++) {
+                String studentID = (String) table1.getValueAt(i, 0);
+
+                for (Object[] photoData : studentPhotos) {
+                    String photoStudentID = (String) photoData[0];
+                    Blob photoBlob = (Blob) photoData[1];
+
+                    if (studentID.equals(photoStudentID) && photoBlob != null) {
+                        try (InputStream inputStream = photoBlob.getBinaryStream()) {
+                            BufferedImage originalImage = ImageIO.read(inputStream);
+                            if (originalImage != null) {
+                                int newWidth = 100;
+                                int newHeight = 100;
+                                Image scaledImage = originalImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+
+
+                                ImageIcon icon = new ImageIcon(scaledImage);
+                                table1.setValueAt(icon, i, 3);
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error loading photos: " + e.getMessage());
+        }
     }
 }

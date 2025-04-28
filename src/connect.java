@@ -157,7 +157,24 @@ public class connect {
     }
 
 
+    public static ArrayList<Object[]> getAllStudentPhotos() {
+        ArrayList<Object[]> photos = new ArrayList<>();
+        String query = "SELECT StudentID, Photo FROM Students WHERE Photo IS NOT NULL";
 
+        try (Connection connection = getConnection();
+             Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            while (rs.next()) {
+                String studentID = rs.getString("StudentID");
+                Blob photoBlob = rs.getBlob("Photo");
+                photos.add(new Object[]{studentID, photoBlob});
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving student photos: " + e.getMessage());
+        }
+        return photos;
+    }
 }
 
 

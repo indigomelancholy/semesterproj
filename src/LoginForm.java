@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,12 +28,11 @@ public class LoginForm extends JFrame {
         setContentPane(panel);
 
         panel.setBackground(new Color(241, 182, 238));
-        
+
         Font font = new Font("Roboto", Font.PLAIN, 20);
 
         comboBox1.setFont(font);
         comboBox1.setBackground(new Color(230, 230, 250));
-
 
         textField2.setFont(font);
         textField3.setFont(font);
@@ -74,18 +75,18 @@ public class LoginForm extends JFrame {
         login.setFont(labelFont);
         login.setForeground(labelColor);
 
-
-
         ImageIcon logoimg = new ImageIcon(getClass().getResource("/logo.png"));
         Image img = logoimg.getImage();
-        Image scaledImg = img.getScaledInstance(180, 180, Image.SCALE_SMOOTH);
+        Image scaledImg = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
         logolabel.setIcon(new ImageIcon(scaledImg));
+
+        logolabel.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 255), 3));
+        logolabel.setBackground(new Color(241, 182, 238));
+
 
         comboBox1.setModel(new DefaultComboBoxModel<>(new String[]{"student", "teacher"}));
 
         setVisible(true);
-
-
 
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -138,6 +139,14 @@ public class LoginForm extends JFrame {
                 loginStatus.setText("");
             }
         });
+    }
+
+    private JPanel createFieldPanel(JLabel label, JComponent field) {
+        JPanel panel = new JPanel(new BorderLayout(5, 5));
+        panel.setOpaque(false);
+        panel.add(label, BorderLayout.NORTH);
+        panel.add(field, BorderLayout.CENTER);
+        return panel;
     }
 }
 

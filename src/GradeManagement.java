@@ -89,8 +89,9 @@ public class GradeManagement extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                dispose();
                 new StudentMain();
+                dispose();
+
             }
         });
 

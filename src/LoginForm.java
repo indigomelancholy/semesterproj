@@ -15,17 +15,70 @@ public class LoginForm extends JFrame {
     private JLabel loginStatus;
     private JLabel loginStatusDisp;
     private JLabel logolabel;
-
-
+    private JLabel email;
+    private JLabel position;
+    private JLabel pass;
+    private JLabel cred;
 
 
     public LoginForm() {
-        setSize(400, 400);
+        setSize(800, 600);
         setContentPane(panel);
+
+        panel.setBackground(new Color(241, 182, 238));
+        
+        Font font = new Font("Roboto", Font.PLAIN, 20);
+
+        comboBox1.setFont(font);
+        comboBox1.setBackground(new Color(230, 230, 250));
+
+
+        textField2.setFont(font);
+        textField3.setFont(font);
+        textField2.setForeground(Color.MAGENTA);
+        textField3.setForeground(Color.MAGENTA);
+
+        loginStatus.setFont(new Font("Cambria", Font.BOLD, 24));
+        loginStatus.setForeground(new Color(100, 100, 150));
+
+        loginButton.setBackground(new Color(115, 76, 187));
+        loginButton.setForeground(Color.WHITE);
+        loginButton.setFont(new Font("Cambria", Font.BOLD, 24));
+        loginButton.setPreferredSize(new Dimension(200, 40));
+
+        textField2.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 255), 2));
+        textField3.setBorder(BorderFactory.createLineBorder(new Color(100, 100, 255), 2));
+
+        resetButton.setBackground(new Color(200, 100, 133));
+        resetButton.setForeground(Color.WHITE);
+        resetButton.setFont(new Font("Cambria", Font.BOLD, 24));
+        resetButton.setPreferredSize(new Dimension(200, 40));
+
+        Font labelFont = new Font("Roboto", Font.BOLD, 18);
+        Color labelColor = new Color(115, 76, 187);
+        loginStatusDisp.setFont(labelFont);
+        loginStatusDisp.setForeground(labelColor);
+
+        email.setFont(labelFont);
+        email.setForeground(labelColor);
+
+        pass.setFont(labelFont);
+        pass.setForeground(labelColor);
+
+        cred.setFont(labelFont);
+        cred.setForeground(labelColor);
+
+        position.setFont(labelFont);
+        position.setForeground(labelColor);
+
+        login.setFont(labelFont);
+        login.setForeground(labelColor);
+
+
 
         ImageIcon logoimg = new ImageIcon(getClass().getResource("/logo.png"));
         Image img = logoimg.getImage();
-        Image scaledImg = img.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+        Image scaledImg = img.getScaledInstance(180, 180, Image.SCALE_SMOOTH);
         logolabel.setIcon(new ImageIcon(scaledImg));
 
         comboBox1.setModel(new DefaultComboBoxModel<>(new String[]{"student", "teacher"}));
@@ -67,12 +120,13 @@ public class LoginForm extends JFrame {
                     User.setLastName(lastName);
                     User.setPhotoStream(imgStream);
 
-                    dispose();
 
                     if (role.equalsIgnoreCase("student")) {
                         new StudentMain();
+                        dispose();
                     } else if (role.equalsIgnoreCase("teacher")) {
                         new TeacherMain();
+                        dispose();
                     }
 
                 }else{

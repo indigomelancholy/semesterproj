@@ -5,7 +5,9 @@
     <constraints>
       <xy x="20" y="20" width="1235" height="1337"/>
     </constraints>
-    <properties/>
+    <properties>
+      <foreground color="-1728287"/>
+    </properties>
     <border type="none"/>
     <children>
       <component id="57f40" class="javax.swing.JLabel" binding="login">
@@ -32,28 +34,28 @@
         </constraints>
         <properties/>
       </component>
-      <component id="4caff" class="javax.swing.JLabel">
+      <component id="4caff" class="javax.swing.JLabel" binding="position">
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Position"/>
+          <text value="Position?"/>
         </properties>
       </component>
-      <component id="2ebc1" class="javax.swing.JLabel">
+      <component id="2ebc1" class="javax.swing.JLabel" binding="email">
         <constraints>
           <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="E-mail"/>
+          <text value="E-mail:"/>
         </properties>
       </component>
-      <component id="7102a" class="javax.swing.JLabel">
+      <component id="7102a" class="javax.swing.JLabel" binding="pass">
         <constraints>
           <grid row="4" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Password"/>
+          <text value="Password:"/>
         </properties>
       </component>
       <component id="49e86" class="javax.swing.JButton" binding="loginButton" default-binding="true">
@@ -105,13 +107,13 @@
       </component>
       <component id="d33fc" class="javax.swing.JLabel" binding="loginStatus">
         <constraints>
-          <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value=""/>
         </properties>
       </component>
-      <component id="5bc66" class="javax.swing.JLabel">
+      <component id="5bc66" class="javax.swing.JLabel" binding="cred">
         <constraints>
           <grid row="4" column="0" row-span="4" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>

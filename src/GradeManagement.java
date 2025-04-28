@@ -53,6 +53,15 @@ public class GradeManagement extends JFrame{
             public void actionPerformed(ActionEvent e) {
 
                 double gpa = calculateGPA();
+
+                if (gpa >= 50.00) {
+                    gpaLabel.setForeground(Color.GREEN);
+                } else if (gpa >= 40.00) {
+                    gpaLabel.setForeground(Color.ORANGE);
+                } else {
+                    gpaLabel.setForeground(Color.RED);
+                }
+
                 gpaLabel.setText("Your GPA: " + String.format("%.2f", gpa));
             }
         });
@@ -61,10 +70,12 @@ public class GradeManagement extends JFrame{
 
     private void loadGrades() {
         try (Connection conn = connect.getConnection()) {
-            String query = "SELECT c.CourseName, g.Grade, t.TeacherName FROM Grades g " +
+            String query = "SELECT c.CourseName, g.Grade, CONCAT(t.FirstName, ' ', t.LastName) AS TeacherName " +
+                    "FROM Grades g " +
                     "JOIN Courses c ON g.CourseID = c.CourseID " +
                     "JOIN Teachers t ON c.TeacherID = t.TeacherID " +
                     "WHERE g.StudentID = ?";
+
 
 
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -75,10 +86,10 @@ public class GradeManagement extends JFrame{
                 while (rs.next()) {
 
                     String courseName = rs.getString("CourseName");
-                    double grade = rs.getDouble("Grade");
+                    String Grade = rs.getString("Grade");
                     String teacherName = rs.getString("TeacherName");
 
-                    model.addRow(new Object[]{courseName, grade, teacherName});
+                    model.addRow(new Object[]{courseName, Grade, teacherName});
                 }
             }
         } catch (SQLException e) {
@@ -87,6 +98,7 @@ public class GradeManagement extends JFrame{
     }
     private void filterGrades(String searchText) {
         DefaultTableModel filteredModel = new DefaultTableModel(new String[]{"Course Name", "Grade", "Teacher Name"}, 0);
+
         for (int row = 0; row < model.getRowCount(); row++) {
 
             String courseName = model.getValueAt(row, 0).toString().toLowerCase();
@@ -109,12 +121,21 @@ public class GradeManagement extends JFrame{
         int totalCourses = 0;
 
         for (int row = 0; row < model.getRowCount(); row++) {
+            Object gradeObj = model.getValueAt(row, 1);
+            String grade = model.getValueAt(row, 1).toString();
 
-            double grade = (Double) model.getValueAt(row, 1);
+            if (gradeObj != null) {
+                try {
+                    double points = Double.parseDouble(gradeObj.toString());
 
+                    totalPoints += points;
+                    totalCourses++;
 
-            totalPoints += grade;
-            totalCourses++;
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid grade found, skipping row " + row);
+
+                }
+            }
         }
 
         return (totalCourses == 0) ? 0 : totalPoints / totalCourses;

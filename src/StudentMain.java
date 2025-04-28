@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -19,12 +20,30 @@ public class StudentMain extends JFrame {
     private JLabel photolabel;
 
     public StudentMain() {
-        setSize(400, 400);
+        setSize(800, 600);
         setContentPane(panel);
 
+        panel.setBackground(new Color(241, 182, 238));
 
+        Font font = new Font("Roboto", Font.PLAIN, 20);
+        Font buttonFont = new Font("Cambria", Font.BOLD, 24);
+        Font labelFont = new Font("Roboto", Font.BOLD, 18);
 
+        nameLabel.setFont(labelFont);
+        nameLabel.setForeground(new Color(115, 76, 187));
         nameLabel.setText("Logged in as: " + User.getFirstName() + " " + User.getLastName());
+
+        gradesManagementButton.setBackground(new Color(115, 76, 187));
+        gradesManagementButton.setForeground(Color.WHITE);
+        gradesManagementButton.setFont(buttonFont);
+        gradesManagementButton.setPreferredSize(new Dimension(250, 40));
+
+        enrolInCourseButton.setBackground(new Color(115, 76, 187));
+        enrolInCourseButton.setForeground(Color.WHITE);
+        enrolInCourseButton.setFont(buttonFont);
+        enrolInCourseButton.setPreferredSize(new Dimension(250, 40));
+
+
         String firstName = User.getFirstName();
         String lastName = User.getLastName();
         InputStream imgStream = User.getPhotoStream();
@@ -32,8 +51,9 @@ public class StudentMain extends JFrame {
         if (imgStream != null) {
             try {
                 BufferedImage userImage = ImageIO.read(imgStream);
-                Image scaledImg = userImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+                Image scaledImg = userImage.getScaledInstance(150, 150, Image.SCALE_SMOOTH);
                 photolabel.setIcon(new ImageIcon(scaledImg));
+
             } catch (IOException e) {
                 System.out.println("Error loading user photo: " + e.getMessage());
                 photolabel.setText("No photo");
@@ -74,34 +94,48 @@ public class StudentMain extends JFrame {
 
                int result = JOptionPane.showConfirmDialog(
                        StudentMain.this, courseOptions,
-                       "Enroll in course? ", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
-                              );
+                       "Enroll in course? ", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
                if (result == JOptionPane.OK_OPTION){
                    Course selected = (Course) courseOptions.getSelectedItem();
 
                    int studentID = User.getStudentID();
 
-                   try(Connection connection = connect.getConnection();
-                       PreparedStatement pstmt = connection.prepareStatement("INSERT INTO Grades (StudentID, CourseID) VALUES (?, ?)")){
+                   try(Connection connection = connect.getConnection()) {
+                       PreparedStatement check = connection.prepareStatement("SELECT  * FROM Grades where StudentID = ? and CourseID = ?");
 
-                       pstmt.setInt(1, studentID);
-                       pstmt.setInt(2, selected.id);
-                       pstmt.executeUpdate();
+                       check.setInt(1, studentID);
+                       check.setInt(2, selected.id);
 
-                       JOptionPane.showMessageDialog(StudentMain.this,
-                               "Enrolled in: " + selected.name);
-                   } catch (SQLException ex) {
-                       if (ex.getMessage().contains("foreign key constraint")) {
+                       ResultSet rs = check.executeQuery();
+
+                       if (rs.next()) {
                            JOptionPane.showMessageDialog(StudentMain.this,
-                                   "Error: Invalid student or course ID");
+                                   "You have already enrolled in this course!");
+
+
                        } else {
+                           PreparedStatement pstmt = connection.prepareStatement("INSERT INTO Grades (StudentID, CourseID) values (?, ?)");
+                           pstmt.setInt(1, studentID);
+                           pstmt.setInt(2, selected.id);
+
+                           pstmt.executeUpdate();
+
                            JOptionPane.showMessageDialog(StudentMain.this,
-                                   "Error: " + ex.getMessage());
+                                   "Enrolled in: " + selected.name);
+                       }
+
+                   }catch (SQLException ex){
+                           if (ex.getMessage().contains("foreign key constraint")) {
+                               JOptionPane.showMessageDialog(StudentMain.this,
+                                       "Error: Invalid student or course ID");
+                           } else {
+                               JOptionPane.showMessageDialog(StudentMain.this,
+                                       "Error: " + ex.getMessage());
+                           }
                        }
                    }
                }
-            }
         });
     }
 }

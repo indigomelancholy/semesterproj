@@ -1,3 +1,4 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -5,7 +6,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.InputStream;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class StudentManagement extends JFrame{
@@ -83,6 +87,7 @@ public class StudentManagement extends JFrame{
 
 
         loadStudents();
+        loadPhotos();
 
         setVisible(true);
 
@@ -192,6 +197,33 @@ new TeacherMain();
 
             for (String[] student : students) {
                 model.addRow(student);
+            }
+        }
+
+        private void loadPhotos(){
+            try (Connection conn = connect.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setInt(1, User.studentID);
+                ResultSet rs = stmt.executeQuery();
+
+                while (rs.next()) {
+                    String courseName = rs.getString("CourseName");
+                    String grade = rs.getString("Grade");
+                    String teacherName = rs.getString("TeacherName");
+
+                    Blob imageBlob = rs.getBlob("ImageData");
+                    ImageIcon imageIcon = null;
+                    if (imageBlob != null) {
+                        InputStream inputStream = imageBlob.getBinaryStream();
+                        BufferedImage image = ImageIO.read(inputStream);
+                        Image scaledImage = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+                        imageIcon = new ImageIcon(scaledImage);
+                    }
+
+                    model.addRow(new Object[]{courseName, grade, teacherName, imageIcon});
+                }
+            } catch (SQLException | IOException e) {
+                e.printStackTrace();
             }
         }
 
